@@ -1,6 +1,8 @@
 FROM dhi.io/alpine-base:3.24-dev
 RUN apk add --no-cache openssh openssh-client docker-cli
+
 RUN ssh-keygen -A
+RUN mkdir -p /run/sshd
 
 RUN adduser -D -s /bin/sh jumper
 
