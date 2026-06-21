@@ -1,4 +1,4 @@
-FROM dhi.io/alpine:3.24
+FROM dhi.io/alpine-base:3.24
 RUN apk add --no-cache openssh openssh-client docker-cli
 
 COPY sshd_config /etc/ssh/sshd_config
