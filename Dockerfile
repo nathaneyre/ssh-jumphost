@@ -1,6 +1,15 @@
 FROM dhi.io/alpine-base:3.24-dev
-RUN apk add --no-cache openssh openssh-client docker-cli
 
+# Update the system
+RUN apt-get update
+
+# Install basic packages
+RUN apt-get install -y --no-install-recommends \
+    openssh-client \
+    openssh-server \
+    docker-cli
+
+# Generate host keys and create the privilege separation directory sshd requires
 RUN ssh-keygen -A
 RUN mkdir -p /run/sshd
 
