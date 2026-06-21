@@ -7,7 +7,11 @@ RUN apk add --no-cache \
 
 # Generate host keys and create the privilege separation directory sshd requires
 RUN ssh-keygen -A
-RUN mkdir -p /run/sshd
+RUN addgroup -S sshd 2>/dev/null || true \
+    && adduser -S -D -h /var/empty/sshd -s /sbin/nologin -G sshd sshd \
+    && mkdir -p /var/empty/sshd \
+    && chmod 755 /var/empty/sshd \
+    && mkdir -p /run/sshd
 
 # Create a user for the jumper
 RUN adduser -D -s /bin/sh jumper
