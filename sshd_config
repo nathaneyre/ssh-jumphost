@@ -1,0 +1,4 @@
+ForceCommand /usr/local/bin/router
+PermitTTY yes
+AllowTcpForwarding yes
+PermitUserEnvironment yes

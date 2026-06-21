@@ -1,0 +1,15 @@
+services:
+  ssh-jumphost:
+    build: .
+    configs:
+      - source: ssh_jumphost_key
+        target: /etc/ssh/ssh_jumphost_key
+    ports:
+      - "${SSH_PORT:-2223}:22"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+
+configs:
+  ssh_jumphost_key:
+    file: /root/.ssh/ssh_jumphost_key
