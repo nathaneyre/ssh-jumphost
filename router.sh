@@ -2,7 +2,7 @@
 set -e
 
 ALIAS="${SSH_ORIGINAL_COMMAND:-}"
-[ -z "$ALIAS" ] && { echo "usage: ssh jumper@host <alias>" >&2; exit 1; }
+[ -z "$ALIAS" ] && { echo "usage: ssh root@host <alias>" >&2; exit 1; }
 
 CONTAINER=$(docker ps \
   --filter "label=ssh.user=${ALIAS}" \

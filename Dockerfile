@@ -9,12 +9,10 @@ RUN apk add --no-cache \
 RUN ssh-keygen -A
 RUN addgroup -S sshd 2>/dev/null || true \
     && adduser -S -D -h /var/empty/sshd -s /sbin/nologin -G sshd sshd \
+    && mkdir -p /root/.ssh && chmod 700 /root/.ssh \
     && mkdir -p /var/empty/sshd \
     && chmod 755 /var/empty/sshd \
     && mkdir -p /run/sshd
-
-# Create a user for the jumper
-RUN adduser -D -s /bin/sh jumper
 
 # Copy the sshd_config and router.sh files
 COPY sshd_config /etc/ssh/sshd_config
