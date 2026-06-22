@@ -10,6 +10,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
     restart: unless-stopped
+    networks:
+      - default
 
 configs:
   ssh_jumphost_key:

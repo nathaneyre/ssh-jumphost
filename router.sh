@@ -15,22 +15,19 @@ CONTAINER=$(docker ps \
   --filter "status=running" \
   --format "{{.Names}}" | head -1)
 [ -z "$CONTAINER" ] && { echo "no container for alias '${ALIAS}'" >&2; exit 1; }
-log "Found container: $CONTAINER"
+log "CONTAINER: $CONTAINER"
 
 TARGET_USER=$(docker inspect "$CONTAINER" --format '{{index .Config.Labels "ssh.target_user"}}')
 TARGET_USER="${TARGET_USER:-root}"
 log "TARGET_USER: $TARGET_USER"
-
-TARGET_IP=$(docker inspect "$CONTAINER" --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')
-log "TARGET_IP: $TARGET_IP"
 
 log "Executing ssh command"
 if ! ssh \
   -i /etc/ssh/ssh_jumphost_key \
   -o StrictHostKeyChecking=no \
   -o UserKnownHostsFile=/dev/null \
-  "${TARGET_USER}@${TARGET_IP}"; then
+  "${TARGET_USER}@${CONTAINER}"; then
   rc=$?
-  log "ERROR ssh failed alias=${ALIAS} target=${TARGET_USER}@${TARGET_IP} exit=${rc}"
+  log "ERROR ssh failed alias=${ALIAS} target=${TARGET_USER}@${CONTAINER} exit=${rc}"
   exit "$rc"
 fi
