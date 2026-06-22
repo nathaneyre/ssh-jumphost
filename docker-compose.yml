@@ -11,8 +11,13 @@ services:
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
     restart: unless-stopped
     networks:
+      - dokploy-network
       - default
 
 configs:
   ssh_jumphost_key:
     file: /root/.ssh/ssh_jumphost_key
+
+networks:
+  dokploy-network:
+    external: true
