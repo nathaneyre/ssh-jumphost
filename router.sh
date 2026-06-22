@@ -14,8 +14,10 @@ CONTAINER=$(docker ps \
 TARGET_USER=$(docker inspect "$CONTAINER" --format '{{index .Config.Labels "ssh.target_user"}}')
 TARGET_USER="${TARGET_USER:-root}"
 
+TARGET_IP=$(docker inspect "$CONTAINER" --format '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}')
+
 exec ssh \
   -i /etc/ssh/ssh_jumphost_key \
   -o StrictHostKeyChecking=no \
   -o UserKnownHostsFile=/dev/null \
-  "${TARGET_USER}@${CONTAINER}"
+  "${TARGET_USER}@${TARGET_IP}"
