@@ -4,3 +4,4 @@ AllowTcpForwarding yes
 PermitUserEnvironment yes
 AllowUsers root
 PermitRootLogin prohibit-password
+PasswordAuthentication no
