@@ -23,7 +23,7 @@ log "TARGET_USER: $TARGET_USER"
 
 log "Executing ssh command"
 if ! ssh \
-  -i /etc/ssh/ssh_jumphost_key \
+  -i /home/sshkeyfetch/.ssh/ssh_jumphost_key \
   -o RequestTTY=force \
   -o StrictHostKeyChecking=no \
   -o UserKnownHostsFile=/dev/null \

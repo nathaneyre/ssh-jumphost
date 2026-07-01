@@ -2,8 +2,10 @@ services:
   ssh-jumphost:
     build: .
     configs:
+      - source: authorized_keys
+        target: /run/secrets/authorized_keys
       - source: ssh_jumphost_key
-        target: /etc/ssh/ssh_jumphost_key
+        target: /run/secrets/ssh_jumphost_key
       - source: ssh_key_repo
         target: /run/secrets/ssh_key_repo
     ports:
@@ -18,6 +20,8 @@ services:
       - default
 
 configs:
+  authorized_keys:
+    file: /root/.ssh/authorized_keys
   ssh_jumphost_key:
     file: /root/.ssh/ssh_jumphost_key
   ssh_key_repo:
