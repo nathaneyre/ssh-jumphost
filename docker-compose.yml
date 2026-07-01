@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ssh-jumphost/Dockerfile
     configs:
-      - source: authorized_keys
+      - source: fallback_authorized_keys
         target: /run/secrets/authorized_keys
       - source: keyfetch_key
         target: /run/secrets/keyfetch_key
@@ -29,7 +29,7 @@ services:
       - default
 
 configs:
-  authorized_keys:
+  fallback_authorized_keys:
     file: /root/.ssh/authorized_keys
   keyfetch_key:
     file: /root/.ssh/keyfetch_key
