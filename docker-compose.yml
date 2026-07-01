@@ -1,6 +1,6 @@
 services:
   ssh-jumphost:
-    build: .
+    build:
       context: .
       dockerfile: ssh-jumphost/Dockerfile
     configs:
