@@ -5,6 +5,9 @@ RUN apk add --no-cache \
     openssh \
     docker-cli
 
+# Create sshkeyfetch user
+RUN adduser -S -D -h /home/sshkeyfetch sshkeyfetch
+
 # Generate host keys and create the privilege separation directory sshd requires
 RUN ssh-keygen -A
 RUN addgroup -S sshd 2>/dev/null || true \
@@ -22,4 +25,9 @@ RUN chmod +x /usr/local/bin/router
 # Expose ports
 EXPOSE 22
 
-CMD ["/usr/sbin/sshd", "-D"]
+# Copy in the entrypoint.sh, remove Windows carriage returns, and make it executable
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
+    && chmod +x /usr/local/bin/entrypoint.sh
+
+CMD ["/usr/local/bin/entrypoint.sh"]

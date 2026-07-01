@@ -1,0 +1,42 @@
+#!/bin/sh
+# /usr/local/sbin/authorized-keys-lookup
+set -u
+
+SSH_KEY_REPO="git@github.com:nathaneyre/ssh-authorized-keys.git"
+if [ -f /run/secrets/ssh_key_repo ]; then
+  SSH_KEY_REPO=$(tr -d '\n\r' < /run/secrets/ssh_key_repo)
+fi
+
+SSH_KEY_REPO_NAME="ssh-authorized-keys"
+KEYFILE="authorized_keys"
+WORKDIR="/home/sshkeyfetch"
+SSH_KEY="/home/sshkeyfetch/.ssh/ssh_auth_key"
+
+export GIT_SSH_COMMAND="ssh -i $SSH_KEY -F /dev/null -o BatchMode=yes -o ConnectTimeout=5 -o IdentitiesOnly=yes -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+output=""
+
+# if the git repository exists, fetch and reset the repository, and set the output to the keyfile
+if [ -d "$WORKDIR/$SSH_KEY_REPO_NAME/.git" ]; then
+    if timeout 10 git -C "$WORKDIR/$SSH_KEY_REPO_NAME" fetch --quiet origin main && \
+       timeout 5 git -C "$WORKDIR/$SSH_KEY_REPO_NAME" reset --quiet --hard origin/main; then
+        output="$(cat "$WORKDIR/$SSH_KEY_REPO_NAME/$KEYFILE" 2>/dev/null)"
+    fi
+# if the git repository does not exist, clone the repository, and set the output to the keyfile
+else
+    cd "$WORKDIR"
+    if timeout 15 git clone --quiet --depth 1 --branch main "$SSH_KEY_REPO" 2>/dev/null; then
+        output="$(cat "$WORKDIR/$SSH_KEY_REPO_NAME/$KEYFILE" 2>/dev/null)"
+    fi
+fi
+
+# treat whitespace-only output as blank
+output="$(printf '%s\n' "$output" | grep -v '^[[:space:]]*$')"
+
+if [ -n "$output" ]; then
+    printf '%s\n' "$output"
+else
+    printf '%s\n' ""
+fi
+
+exit 0

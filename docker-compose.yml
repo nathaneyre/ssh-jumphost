@@ -4,11 +4,14 @@ services:
     configs:
       - source: ssh_jumphost_key
         target: /etc/ssh/ssh_jumphost_key
+      - source: ssh_key_repo
+        target: /run/secrets/ssh_key_repo
     ports:
       - "${SSH_PORT:-2223}:22"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      - ./authorized-keys-lookup:/usr/local/sbin/authorized-keys-lookup:ro
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -17,6 +20,9 @@ services:
 configs:
   ssh_jumphost_key:
     file: /root/.ssh/ssh_jumphost_key
+  ssh_key_repo:
+    content: |
+      ${SSH_KEY_REPO:-git@github.com:nathaneyre/ssh-authorized-keys.git}
 
 networks:
   dokploy-network:

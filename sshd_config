@@ -1,3 +1,5 @@
+AuthorizedKeysCommand /bin/sh /usr/local/sbin/authorized-keys-lookup
+AuthorizedKeysCommandUser sshkeyfetch
 ForceCommand /usr/local/bin/router
 PermitTTY yes
 AllowTcpForwarding yes
