@@ -8,7 +8,8 @@ RUN apk add --no-cache \
 
 # Create jumphost user
 RUN addgroup -S jumphost \
-    && adduser -S -D -h /home/jumphost -G jumphost jumphost
+    && adduser -S -D -h /home/jumphost -G jumphost jumphost \
+    && sed -i 's/^jumphost:!/jumphost:*/' /etc/shadow
 
 # Generate host keys and create the privilege separation directory sshd requires
 RUN ssh-keygen -A
