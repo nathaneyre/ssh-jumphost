@@ -1,6 +1,8 @@
 services:
   ssh-jumphost:
     build: .
+      context: .
+      dockerfile: ssh-jumphost/Dockerfile
     configs:
       - source: authorized_keys
         target: /run/secrets/authorized_keys
@@ -17,8 +19,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
-      - ./router.sh:/usr/local/sbin/router:ro
-      - ./authorized-keys-lookup:/usr/local/sbin/authorized-keys-lookup:ro
+      - ./ssh-jumphost/usr/local/sbin/router.sh:/usr/local/sbin/router:ro
+      - ./ssh-jumphost/usr/local/sbin/authorized-keys-lookup:/usr/local/sbin/authorized-keys-lookup:ro
     restart: unless-stopped
     networks:
       - dokploy-network

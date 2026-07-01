@@ -27,7 +27,7 @@ COPY sshd_config /etc/ssh/sshd_config
 EXPOSE 22
 
 # Copy in the entrypoint.sh, remove Windows carriage returns, and make it executable
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ssh-jumphost/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
     && chmod +x /usr/local/bin/entrypoint.sh
 
