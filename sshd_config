@@ -1,6 +1,6 @@
 AuthorizedKeysCommand /bin/sh /usr/local/sbin/authorized-keys-lookup
 AuthorizedKeysCommandUser jumphost
-ForceCommand /usr/local/bin/router
+ForceCommand /usr/local/sbin/router
 PermitTTY yes
 AllowTcpForwarding yes
 PermitUserEnvironment yes

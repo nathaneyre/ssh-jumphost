@@ -20,7 +20,7 @@ RUN addgroup -S sshd 2>/dev/null || true \
     && chmod 755 /var/empty/sshd \
     && mkdir -p /run/sshd
 
-# Copy the sshd_config and router.sh files
+# Copy the sshd_config
 COPY sshd_config /etc/ssh/sshd_config
 
 # Expose ports
