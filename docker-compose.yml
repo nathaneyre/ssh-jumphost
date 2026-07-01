@@ -17,6 +17,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      - ./router.sh:/usr/local/sbin/router:ro
       - ./authorized-keys-lookup:/usr/local/sbin/authorized-keys-lookup:ro
     restart: unless-stopped
     networks:

@@ -22,8 +22,6 @@ RUN addgroup -S sshd 2>/dev/null || true \
 
 # Copy the sshd_config and router.sh files
 COPY sshd_config /etc/ssh/sshd_config
-COPY router.sh /usr/local/bin/router
-RUN chmod +x /usr/local/bin/router
 
 # Expose ports
 EXPOSE 22

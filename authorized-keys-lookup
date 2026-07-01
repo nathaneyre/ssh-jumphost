@@ -12,6 +12,8 @@ debug() {
   [ "${DEBUG:-}" = "true" ] && log "[DEBUG] $*" || true
 }
 
+debug "Found jumphost user authorized_keys: $output"
+
 SSH_KEY_REPO="git@github.com:nathaneyre/ssh-authorized-keys.git"
 if [ -f /run/secrets/ssh_key_repo ]; then
   SSH_KEY_REPO=$(tr -d '\n\r' < /run/secrets/ssh_key_repo)
@@ -51,7 +53,6 @@ fi
 # treat whitespace-only output as blank
 output="$(printf '%s\n' "$output" | grep -v '^[[:space:]]*$')"
 
-debug "Found jumphost user authorized_keys: $output"
 debug "Found GIT authorized_keys: $output"
 
 if [ -n "$output" ]; then
