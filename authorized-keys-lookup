@@ -1,6 +1,7 @@
 #!/bin/sh
 # /usr/local/sbin/authorized-keys-lookup
 set -u
+USERNAME="$1"
 
 log() {
   msg="[authorized-keys-lookup] $*"
