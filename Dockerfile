@@ -2,8 +2,9 @@ FROM dhi.io/alpine-base:3.24-dev
 
 # Install basic packages
 RUN apk add --no-cache \
-    openssh \
-    docker-cli
+    docker-cli \
+    git \
+    openssh
 
 # Create sshkeyfetch user
 RUN addgroup -S sshkeyfetch \
