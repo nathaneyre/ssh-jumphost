@@ -44,8 +44,7 @@ fi
 
 # treat whitespace-only output as blank
 output="$(printf '%s\n' "$output" | grep -v '^[[:space:]]*$')"
-log "Found authorized_keys:"
-log $output
+log "Found authorized_keys: $output"
 
 if [ -n "$output" ]; then
     printf '%s\n' "$output"
