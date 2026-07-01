@@ -8,6 +8,8 @@ services:
         target: /run/secrets/ssh_jumphost_key
       - source: ssh_key_repo
         target: /run/secrets/ssh_key_repo
+    environment:
+      - DEBUG
     ports:
       - "${SSH_PORT:-2223}:22"
     volumes:
