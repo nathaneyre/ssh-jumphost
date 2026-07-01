@@ -6,10 +6,10 @@ services:
     configs:
       - source: authorized_keys
         target: /run/secrets/authorized_keys
-      - source: jumphost_ssh_key
-        target: /run/secrets/jumphost_ssh_key
-      - source: jumphost_ssh_key_pub
-        target: /run/secrets/jumphost_ssh_key.pub
+      - source: keyfetch_key
+        target: /run/secrets/keyfetch_key
+      - source: keyfetch_key_pub
+        target: /run/secrets/keyfetch_key.pub
       - source: ssh_key_repo
         target: /run/secrets/ssh_key_repo
     environment:
@@ -17,10 +17,11 @@ services:
     ports:
       - "${SSH_PORT:-2223}:22"
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
-      - ./ssh-jumphost/usr/local/sbin/router.sh:/usr/local/sbin/router:ro
+      - ./ssh-jumphost/etc/ssh/sshd_config.d/00-custom.conf:/etc/ssh/sshd_config.d/00-custom.conf:ro
       - ./ssh-jumphost/usr/local/sbin/authorized-keys-lookup:/usr/local/sbin/authorized-keys-lookup:ro
+      - ./ssh-jumphost/usr/local/sbin/router.sh:/usr/local/sbin/router:ro
     restart: unless-stopped
     networks:
       - dokploy-network
@@ -29,10 +30,10 @@ services:
 configs:
   authorized_keys:
     file: /root/.ssh/authorized_keys
-  jumphost_ssh_key:
-    file: /root/.ssh/jumphost_ssh_key
-  jumphost_ssh_key_pub:
-    file: /root/.ssh/jumphost_ssh_key.pub
+  keyfetch_key:
+    file: /root/.ssh/keyfetch_key
+  keyfetch_key_pub:
+    file: /root/.ssh/keyfetch_key.pub
   ssh_key_repo:
     content: |
       ${SSH_KEY_REPO:-git@github.com:nathaneyre/ssh-authorized-keys.git}

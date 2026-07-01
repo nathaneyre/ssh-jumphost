@@ -1,15 +1,18 @@
 FROM dhi.io/alpine-base:3.24-dev
 
+# Update the system
+RUN apk update
+
 # Install basic packages
 RUN apk add --no-cache \
     docker-cli \
     git \
     openssh
 
-# Create jumphost user
-RUN addgroup -S jumphost \
-    && adduser -S -D -h /home/jumphost -s /bin/sh -G jumphost jumphost \
-    && sed -i 's/^jumphost:!/jumphost:*/' /etc/shadow
+# Create keyfetch user
+RUN addgroup -S keyfetch \
+    && adduser -S -D -h /home/keyfetch -s /bin/sh -G keyfetch keyfetch \
+    && sed -i 's/^keyfetch:!/keyfetch:*/' /etc/shadow
 
 # Generate host keys and create the privilege separation directory sshd requires
 RUN ssh-keygen -A
@@ -19,9 +22,6 @@ RUN addgroup -S sshd 2>/dev/null || true \
     && mkdir -p /var/empty/sshd \
     && chmod 755 /var/empty/sshd \
     && mkdir -p /run/sshd
-
-# Copy the sshd_config
-COPY sshd_config /etc/ssh/sshd_config
 
 # Expose ports
 EXPOSE 22
