@@ -1,7 +1,6 @@
 #!/bin/sh
 # /usr/local/sbin/authorized-keys-lookup
 set -u
-USERNAME="$1"
 
 log() {
   msg="[authorized-keys-lookup] $*"
@@ -13,8 +12,8 @@ debug() {
   [ "${DEBUG:-}" = "true" ] && log "[DEBUG] $*" || true
 }
 
-user_authorized_keys=$(cat "/home/$USERNAME/.ssh/authorized_keys" 2>/dev/null)
-debug "Found $USERNAME authorized_keys: $user_authorized_keys"
+user_authorized_keys=$(cat "/home/$USER/.ssh/authorized_keys" 2>/dev/null)
+debug "Found $USER authorized_keys: $user_authorized_keys"
 
 SSH_KEY_REPO="git@github.com:nathaneyre/ssh-authorized-keys.git"
 if [ -f /run/secrets/ssh_key_repo ]; then
