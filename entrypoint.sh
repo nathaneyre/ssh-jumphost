@@ -12,11 +12,6 @@ mkdir -p /home/jumphost/.ssh \
     && chmod 600 /home/jumphost/.ssh/jumphost_ssh_key \
     && chmod 644 /home/jumphost/.ssh/jumphost_ssh_key.pub
 
-# Add jumphost user to docker group
-DOCKER_GID=$(stat -c '%g' /var/run/docker.sock)
-addgroup -g "$DOCKER_GID" dockerhost 2>/dev/null || true
-adduser jumphost dockerhost 2>/dev/null || true
-
 # Set debug flag for all users
 printf 'DEBUG=%s\n' "${DEBUG:-false}" > /run/debug_flag
 
