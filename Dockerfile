@@ -6,7 +6,8 @@ RUN apk add --no-cache \
     docker-cli
 
 # Create sshkeyfetch user
-RUN adduser -S -D -h /home/sshkeyfetch sshkeyfetch
+RUN addgroup -S sshkeyfetch \
+    && adduser -S -D -h /home/sshkeyfetch -G sshkeyfetch sshkeyfetch
 
 # Generate host keys and create the privilege separation directory sshd requires
 RUN ssh-keygen -A
