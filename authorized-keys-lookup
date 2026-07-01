@@ -12,7 +12,8 @@ debug() {
   [ "${DEBUG:-}" = "true" ] && log "[DEBUG] $*" || true
 }
 
-debug "Found jumphost user authorized_keys: $output"
+user_authorized_keys=$(cat "/home/$USERNAME/.ssh/authorized_keys" 2>/dev/null)
+debug "Found jumphost user authorized_keys: $user_authorized_keys"
 
 SSH_KEY_REPO="git@github.com:nathaneyre/ssh-authorized-keys.git"
 if [ -f /run/secrets/ssh_key_repo ]; then
