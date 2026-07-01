@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-# Install jumphost_ssh_key for jumphost user
+# Install jumphost_ssh_key for jumphost user and set .ssh permissions
 mkdir -p /home/jumphost/.ssh \
     && cp /run/secrets/authorized_keys /home/jumphost/.ssh/authorized_keys \
     && cp /run/secrets/jumphost_ssh_key /home/jumphost/.ssh/jumphost_ssh_key \
