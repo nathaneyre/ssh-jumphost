@@ -10,4 +10,7 @@ mkdir -p /home/sshkeyfetch/.ssh \
     && chmod 600 /home/sshkeyfetch/.ssh/ssh_jumphost_key \
     && chmod 600 /home/sshkeyfetch/.ssh/ssh_jumphost_key
 
+# Set debug flag for all users
+printf 'DEBUG=%s\n' "${DEBUG:-false}" > /run/debug_flag
+
 exec /usr/sbin/sshd -D -e

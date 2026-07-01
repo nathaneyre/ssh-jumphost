@@ -1,11 +1,13 @@
 #!/bin/sh
 set -e
 
+
 log() {
   msg="[router] $*"
   printf '%s\n' "$msg" >&2
 }
 
+DEBUG=$(grep '^DEBUG=' /run/debug_flag 2>/dev/null | cut -d= -f2)
 debug() {
   [ "${DEBUG:-}" = "true" ] && log "[DEBUG] $*" || true
 }
