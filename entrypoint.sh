@@ -1,14 +1,16 @@
 #!/bin/sh
 set -eu
 
-# Install ssh_jumphost_key for sshkeyfetch user
-mkdir -p /home/sshkeyfetch/.ssh \
-    && cp /run/secrets/authorized_keys /home/sshkeyfetch/.ssh/authorized_keys \
-    && cp /run/secrets/ssh_jumphost_key /home/sshkeyfetch/.ssh/ssh_jumphost_key \
-    && chown -R sshkeyfetch:sshkeyfetch /home/sshkeyfetch \
-    && chmod 700 /home/sshkeyfetch/.ssh \
-    && chmod 600 /home/sshkeyfetch/.ssh/ssh_jumphost_key \
-    && chmod 600 /home/sshkeyfetch/.ssh/ssh_jumphost_key
+# Install jumphost_ssh_key for jumphost user
+mkdir -p /home/jumphost/.ssh \
+    && cp /run/secrets/authorized_keys /home/jumphost/.ssh/authorized_keys \
+    && cp /run/secrets/jumphost_ssh_key /home/jumphost/.ssh/jumphost_ssh_key \
+    && cp /run/secrets/jumphost_ssh_key.pub /home/jumphost/.ssh/jumphost_ssh_key.pub \
+    && chown -R jumphost:jumphost /home/jumphost \
+    && chmod 700 /home/jumphost/.ssh \
+    && chmod 600 /home/jumphost/.ssh/authorized_keys \
+    && chmod 600 /home/jumphost/.ssh/jumphost_ssh_key \
+    && chmod 644 /home/jumphost/.ssh/jumphost_ssh_key.pub
 
 # Set debug flag for all users
 printf 'DEBUG=%s\n' "${DEBUG:-false}" > /run/debug_flag

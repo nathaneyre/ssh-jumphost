@@ -29,7 +29,7 @@ debug "TARGET_USER: $TARGET_USER"
 
 debug "Executing ssh command"
 if ! ssh \
-  -i /home/sshkeyfetch/.ssh/ssh_jumphost_key \
+  -i /home/jumphost/.ssh/jumphost_ssh_key \
   -o RequestTTY=force \
   -o StrictHostKeyChecking=no \
   -o UserKnownHostsFile=/dev/null \

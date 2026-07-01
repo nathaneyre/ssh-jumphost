@@ -1,9 +1,8 @@
 AuthorizedKeysCommand /bin/sh /usr/local/sbin/authorized-keys-lookup
-AuthorizedKeysCommandUser sshkeyfetch
+AuthorizedKeysCommandUser jumphost
 ForceCommand /usr/local/bin/router
 PermitTTY yes
 AllowTcpForwarding yes
 PermitUserEnvironment yes
-AllowUsers root
-PermitRootLogin prohibit-password
+AllowUsers jumphost
 PasswordAuthentication no

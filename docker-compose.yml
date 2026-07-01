@@ -4,8 +4,10 @@ services:
     configs:
       - source: authorized_keys
         target: /run/secrets/authorized_keys
-      - source: ssh_jumphost_key
-        target: /run/secrets/ssh_jumphost_key
+      - source: jumphost_ssh_key
+        target: /run/secrets/jumphost_ssh_key
+      - source: jumphost_ssh_key_pub
+        target: /run/secrets/jumphost_ssh_key.pub
       - source: ssh_key_repo
         target: /run/secrets/ssh_key_repo
     environment:
@@ -24,8 +26,10 @@ services:
 configs:
   authorized_keys:
     file: /root/.ssh/authorized_keys
-  ssh_jumphost_key:
-    file: /root/.ssh/ssh_jumphost_key
+  jumphost_ssh_key:
+    file: /root/.ssh/jumphost_ssh_key
+  jumphost_ssh_key_pub:
+    file: /root/.ssh/jumphost_ssh_key.pub
   ssh_key_repo:
     content: |
       ${SSH_KEY_REPO:-git@github.com:nathaneyre/ssh-authorized-keys.git}

@@ -6,9 +6,9 @@ RUN apk add --no-cache \
     git \
     openssh
 
-# Create sshkeyfetch user
-RUN addgroup -S sshkeyfetch \
-    && adduser -S -D -h /home/sshkeyfetch -G sshkeyfetch sshkeyfetch
+# Create jumphost user
+RUN addgroup -S jumphost \
+    && adduser -S -D -h /home/jumphost -G jumphost jumphost
 
 # Generate host keys and create the privilege separation directory sshd requires
 RUN ssh-keygen -A
