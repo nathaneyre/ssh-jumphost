@@ -3,39 +3,44 @@
 set -u
 
 log() {
-    printf '[authorized-keys-lookup] %s\n' "$1" >&2
+  msg="[authorized-keys-lookup] $*"
+  printf '%s\n' "$msg" >&2
+}
+
+debug() {
+  [ "${DEBUG:-}" = "true" ] && log "[DEBUG] $*" || true
 }
 
 SSH_KEY_REPO="git@github.com:nathaneyre/ssh-authorized-keys.git"
 if [ -f /run/secrets/ssh_key_repo ]; then
   SSH_KEY_REPO=$(tr -d '\n\r' < /run/secrets/ssh_key_repo)
 fi
-log "SSH_KEY_REPO: $SSH_KEY_REPO"
+debug "SSH_KEY_REPO: $SSH_KEY_REPO"
 
 SSH_KEY_REPO_NAME="ssh-authorized-keys"
 KEYFILE="authorized_keys"
 WORKDIR="/home/sshkeyfetch"
 SSH_KEY="/home/sshkeyfetch/.ssh/ssh_jumphost_key"
-log "SSH_KEY_REPO_NAME: $SSH_KEY_REPO_NAME"
-log "KEYFILE: $KEYFILE"
-log "WORKDIR: $WORKDIR"
-log "SSH_KEY: $SSH_KEY"
+debug "SSH_KEY_REPO_NAME: $SSH_KEY_REPO_NAME"
+debug "KEYFILE: $KEYFILE"
+debug "WORKDIR: $WORKDIR"
+debug "SSH_KEY: $SSH_KEY"
 
 export GIT_SSH_COMMAND="ssh -i $SSH_KEY -F /dev/null -o BatchMode=yes -o ConnectTimeout=5 -o IdentitiesOnly=yes -o LogLevel=ERROR -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
-log "GIT_SSH_COMMAND: $GIT_SSH_COMMAND"
+debug "GIT_SSH_COMMAND: $GIT_SSH_COMMAND"
 
 output=""
 
 # if the git repository exists, fetch and reset the repository, and set the output to the keyfile
 if [ -d "$WORKDIR/$SSH_KEY_REPO_NAME/.git" ]; then
-    log "Repo found. Pulling..."
+    debug "Repo found. Pulling..."
     if timeout 10 git -C "$WORKDIR/$SSH_KEY_REPO_NAME" fetch --quiet origin main && \
        timeout 5 git -C "$WORKDIR/$SSH_KEY_REPO_NAME" reset --quiet --hard origin/main; then
         output="$(cat "$WORKDIR/$SSH_KEY_REPO_NAME/$KEYFILE" 2>/dev/null)"
     fi
 # if the git repository does not exist, clone the repository, and set the output to the keyfile
 else
-    log "Repo not found. Cloning..."
+    debug "Repo not found. Cloning..."
     cd "$WORKDIR"
     if timeout 15 git clone --quiet --depth 1 --branch main "$SSH_KEY_REPO" 2>/dev/null; then
         output="$(cat "$WORKDIR/$SSH_KEY_REPO_NAME/$KEYFILE" 2>/dev/null)"
@@ -44,7 +49,7 @@ fi
 
 # treat whitespace-only output as blank
 output="$(printf '%s\n' "$output" | grep -v '^[[:space:]]*$')"
-log "Found authorized_keys: $output"
+debug "Found authorized_keys: $output"
 
 if [ -n "$output" ]; then
     printf '%s\n' "$output"

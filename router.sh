@@ -2,26 +2,30 @@
 set -e
 
 log() {
-  msg="[router] $(date -Iseconds) $*"
-  printf '%s\n' "$msg" >> /proc/1/fd/2 2>/dev/null || printf '%s\n' "$msg" >&2
+  msg="[router] $*"
+  printf '%s\n' "$msg" >&2
+}
+
+debug() {
+  [ "${DEBUG:-}" = "true" ] && log "[DEBUG] $*" || true
 }
 
 ALIAS="${SSH_ORIGINAL_COMMAND:-}"
 [ -z "$ALIAS" ] && { echo "usage: ssh root@host <alias>" >&2; exit 1; }
-log "ALIAS: $ALIAS"
+debug "ALIAS: $ALIAS"
 
 CONTAINER=$(docker ps \
   --filter "label=ssh.user=${ALIAS}" \
   --filter "status=running" \
   --format "{{.Names}}" | head -1)
 [ -z "$CONTAINER" ] && { echo "no container for alias '${ALIAS}'" >&2; exit 1; }
-log "CONTAINER: $CONTAINER"
+debug "CONTAINER: $CONTAINER"
 
 TARGET_USER=$(docker inspect "$CONTAINER" --format '{{index .Config.Labels "ssh.target_user"}}')
 TARGET_USER="${TARGET_USER:-root}"
-log "TARGET_USER: $TARGET_USER"
+debug "TARGET_USER: $TARGET_USER"
 
-log "Executing ssh command"
+debug "Executing ssh command"
 if ! ssh \
   -i /home/sshkeyfetch/.ssh/ssh_jumphost_key \
   -o RequestTTY=force \
@@ -29,6 +33,6 @@ if ! ssh \
   -o UserKnownHostsFile=/dev/null \
   "${TARGET_USER}@${CONTAINER}"; then
   rc=$?
-  log "ERROR ssh failed alias=${ALIAS} target=${TARGET_USER}@${CONTAINER} exit=${rc}"
+  debug "ERROR ssh failed alias=${ALIAS} target=${TARGET_USER}@${CONTAINER} exit=${rc}"
   exit "$rc"
 fi
